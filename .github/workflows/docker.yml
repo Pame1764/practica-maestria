@@ -1,0 +1,26 @@
+name: Validacion Docker
+
+on:
+  push:
+    branches:
+      - main
+      - "feat/**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  validar-docker:
+    name: Validar Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v4
+
+      - name: Validar Docker Compose
+        run: docker compose config
+
+      - name: Construir imágenes Docker
+        run: docker compose build
