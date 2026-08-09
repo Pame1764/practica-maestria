@@ -1,0 +1,14 @@
+# Directorio local de proveedores/módulos
+.terraform/
+
+# Estado local: puede contener datos sensibles
+*.tfstate
+*.tfstate.*
+
+# Variables locales del laboratorio
+terraform.tfvars
+
+# Planes y errores
+*.tfplan
+crash.log
+crash.*.log

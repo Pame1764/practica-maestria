@@ -1,0 +1,35 @@
+name: Terraform Validate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "infra/**"
+  push:
+    branches: [main]
+    paths:
+      - "infra/**"
+
+jobs:
+  validar-iac:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./infra
+
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v4
+
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Verificar formato
+        run: terraform fmt -check -recursive
+
+      - name: Inicializar proveedores
+        run: terraform init -backend=false -input=false
+
+      - name: Validar configuración
+        run: terraform validate
