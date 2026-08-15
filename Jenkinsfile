@@ -4,7 +4,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Descarga directa del repositorio
-                git 'https://github.com/tu-usuario/tu-repositorio.git' 
+                git 'https://github.com/Pame1764/practica-maestria.git' 
             }
         }
         stage('Identificacion'){
