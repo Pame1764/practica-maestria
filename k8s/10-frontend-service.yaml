@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: practica-frontend
+  namespace: devops-lab
+spec:
+  selector:
+    app: practica-frontend
+  ports:
+    - name: http
+      port: 5173
+      targetPort: 5173
+  type: ClusterIP

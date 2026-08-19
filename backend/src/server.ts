@@ -11,6 +11,13 @@ app.register(cors, {
   origin: true, // Permitir solicitudes desde el frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
+app.get('/health', async () => {
+  return { status: 'OK', 
+            message: 'Servidor Backend Fastify activo',
+            version: process.env.APP_VERSION ?? 'v1',
+            service: 'backend'
+           };
+});
 
 // Ruta raíz de verificación
 app.get('/', async () => {
