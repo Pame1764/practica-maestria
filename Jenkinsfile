@@ -96,7 +96,7 @@ pipeline {
             }
         }
 
-        stage('Docker - Publish') {
+       stage('Docker - Publish') {
             steps {
 
                 withCredentials([usernamePassword(
@@ -110,19 +110,21 @@ pipeline {
                             -u "$DOCKER_USER" \
                             --password-stdin
 
-                        docker tag \
-                            ${LOCAL_BACKEND_IMAGE}:latest \
-                            $DOCKER_USER/${REMOTE_BACKEND_IMAGE}:${BUILD_NUMBER}
+                        # Backend tags
+                        docker tag ${LOCAL_BACKEND_IMAGE}:latest $DOCKER_USER/${REMOTE_BACKEND_IMAGE}:${BUILD_NUMBER}
+                        docker tag ${LOCAL_BACKEND_IMAGE}:latest $DOCKER_USER/${REMOTE_BACKEND_IMAGE}:latest
 
-                        docker tag \
-                            ${LOCAL_FRONTEND_IMAGE}:latest \
-                            $DOCKER_USER/${REMOTE_FRONTEND_IMAGE}:${BUILD_NUMBER}
+                        # Frontend tags
+                        docker tag ${LOCAL_FRONTEND_IMAGE}:latest $DOCKER_USER/${REMOTE_FRONTEND_IMAGE}:${BUILD_NUMBER}
+                        docker tag ${LOCAL_FRONTEND_IMAGE}:latest $DOCKER_USER/${REMOTE_FRONTEND_IMAGE}:latest
 
-                        docker push \
-                            $DOCKER_USER/${REMOTE_BACKEND_IMAGE}:${BUILD_NUMBER}
+                        # Push Backend
+                        docker push $DOCKER_USER/${REMOTE_BACKEND_IMAGE}:${BUILD_NUMBER}
+                        docker push $DOCKER_USER/${REMOTE_BACKEND_IMAGE}:latest
 
-                        docker push \
-                            $DOCKER_USER/${REMOTE_FRONTEND_IMAGE}:${BUILD_NUMBER}
+                        # Push Frontend
+                        docker push $DOCKER_USER/${REMOTE_FRONTEND_IMAGE}:${BUILD_NUMBER}
+                        docker push $DOCKER_USER/${REMOTE_FRONTEND_IMAGE}:latest
 
                         docker logout
                     '''
