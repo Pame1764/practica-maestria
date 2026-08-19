@@ -12,8 +12,8 @@ pipeline {
     }
 
     environment {
-        LOCAL_BACKEND_IMAGE = 'proyecto-integrador-u3-backend'
-        LOCAL_FRONTEND_IMAGE = 'proyecto-integrador-u3-frontend'
+        LOCAL_BACKEND_IMAGE = 'proyecto-3-backend'
+        LOCAL_FRONTEND_IMAGE = 'proyecto-3-frontend'
 
         REMOTE_BACKEND_IMAGE = 'proyecto-integrador-backend'
         REMOTE_FRONTEND_IMAGE = 'proyecto-integrador-frontend'
