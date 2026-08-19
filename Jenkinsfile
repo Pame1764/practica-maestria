@@ -3,14 +3,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Descarga directa del repositorio
-                git 'https://github.com/Pame1764/practica-maestria.git' 
+                git branch: 'main', url: 'https://github.com/Pame1764/practica-maestria.git'
             }
         }
-        stage('Identificacion'){
+        stage('Identificacion') {
             steps {
                 sh 'git rev-parse --short HEAD'
-                sh 'git status -short'
+                sh 'git status -s'
             }
         }
     }
