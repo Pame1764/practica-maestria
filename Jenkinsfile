@@ -13,8 +13,12 @@ pipeline {
     }
 
     environment {
-        LOCAL_BACKEND_IMAGE  = 'practica-backend'
-        LOCAL_FRONTEND_IMAGE = 'practica-frontend'
+        environment {
+    LOCAL_BACKEND_IMAGE  = 'proyecto-3-backend'
+    LOCAL_FRONTEND_IMAGE = 'proyecto-3-frontend'
+    
+    // El resto del bloque environment se queda igual...
+}
 
         REMOTE_BACKEND_IMAGE  = 'proyecto-integrador-backend'
         REMOTE_FRONTEND_IMAGE = 'proyecto-integrador-frontend'
