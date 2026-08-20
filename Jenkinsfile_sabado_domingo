@@ -12,10 +12,6 @@ pipeline {
         disableConcurrentBuilds()
     }
 
-    triggers {
-        githubPush()
-    }
-
     environment {
         DOCKER_USER           = 'cinthya12'
         LOCAL_BACKEND_IMAGE   = 'proyecto-3-backend'
@@ -380,3 +376,4 @@ EOF
         }
     }
 }
+
