@@ -1,7 +1,10 @@
-# Etapa 1: Build de la aplicación
+# Etapa 1: Build de React con Vite
 FROM node:24-alpine AS builder
 
 WORKDIR /app
+
+# Definir la URL pública del backend para la etapa de compilación
+ENV VITE_API_URL=https://proyecto-integrador-backend-production-92c1.up.railway.app
 
 COPY package*.json ./
 RUN npm ci
@@ -9,13 +12,11 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Etapa 2: Servidor web ligero para producción
+# Etapa 2: Servidor Web Nginx
 FROM nginx:alpine
 
-# Copiar los archivos compilados al directorio de Nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Configuración de Nginx para manejar rutas de React (SPA)
 RUN echo 'server { \
     listen 5173; \
     location / { \
