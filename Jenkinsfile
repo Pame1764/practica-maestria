@@ -23,10 +23,10 @@ pipeline {
 
         PUBLIC_BACKEND_URL = 'https://proyecto-integrador-backend-production-92c1.up.railway.app'
 
-        RAILWAY_PROJECT_ID          = '6c759af0-9895-4a99-8b00-bf4642281129'
-        RAILWAY_ENVIRONMENT_ID      = 'efdd7c0a-1fa7-4d3a-89d0-f7647e948c4c'
-        RAILWAY_BACKEND_SERVICE_ID  = '5c52cc15-b575-488a-969e-c35bacee17c0'
-        RAILWAY_FRONTEND_SERVICE_ID = '4c049b51-26d5-4b82-bf0b-2534c80c888c'
+        RAILWAY_PROJECT_ID          = '37075425-4eaf-4f1a-a5f7-e49455ea4173'
+        RAILWAY_ENVIRONMENT_ID      = '639055fb-12c3-4077-91c3-20d8ca004ac9'
+        RAILWAY_BACKEND_SERVICE_ID  = '92fe0ca7-47b4-4cda-9f07-f791e68c7d55'
+        RAILWAY_FRONTEND_SERVICE_ID = '2a6e2269-b339-4078-aa38-5300ce07491c'
     }
 
     stages {
