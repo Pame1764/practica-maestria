@@ -114,7 +114,7 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'jenkins-u3',
+                        credentialsId: 'Practica-3',
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )
@@ -172,7 +172,7 @@ pipeline {
                 withCredentials([
                     string(
                         credentialsId: 'railway-token',
-                        variable: 'RAILWAY_TOKEN'
+                        variable: 'RAILWAY-TOKEN'
                     )
                 ]) {
                     sh '''
