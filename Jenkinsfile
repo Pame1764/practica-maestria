@@ -174,7 +174,7 @@ pipeline {
                 withCredentials([
                     string(
                         credentialsId: 'railway-token',
-                        variable: 'RAILWAY-TOKEN'
+                        variable: 'RAILWAY_TOKEN' // <--- Cambiado de RAILWAY-TOKEN a RAILWAY_TOKEN
                     )
                 ]) {
                     sh '''
@@ -184,7 +184,10 @@ pipeline {
                         echo "REDEPLOY BACKEND EN RAILWAY"
                         echo "========================================"
 
-                        npx -y @railway/cli redeploy                             --service "$RAILWAY_BACKEND_SERVICE_ID"                             --environment "$RAILWAY_ENVIRONMENT_ID"                             --yes
+                        npx -y @railway/cli redeploy \
+                            --service "$RAILWAY_BACKEND_SERVICE_ID" \
+                            --environment "$RAILWAY_ENVIRONMENT_ID" \
+                            --yes
 
                         echo "Redeploy del backend solicitado correctamente."
                     '''
