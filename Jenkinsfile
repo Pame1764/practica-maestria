@@ -13,15 +13,10 @@ pipeline {
     }
 
     environment {
-        environment {
-    LOCAL_BACKEND_IMAGE  = 'proyecto-3-backend'
-    LOCAL_FRONTEND_IMAGE = 'proyecto-3-frontend'
-    
-    // El resto del bloque environment se queda igual...
-}
+        
 
-        REMOTE_BACKEND_IMAGE  = 'proyecto-integrador-backend'
-        REMOTE_FRONTEND_IMAGE = 'proyecto-integrador-frontend'
+        LOCAL_BACKEND_IMAGE  = 'proyecto-3-backend'
+        LOCAL_FRONTEND_IMAGE = 'proyecto-3-frontend'
 
         PUBLIC_BACKEND_URL = 'https://proyecto-integrador-backend-production-92c1.up.railway.app'
 
