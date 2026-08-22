@@ -10,7 +10,7 @@ pipeline {
     }
 
     tools {
-    nodejs 'NodeJS'
+    NodeJS 'NodeJS 24.19.0'
     }
 
     triggers {
