@@ -113,7 +113,7 @@ EOF
                             
                             docker run --rm \
                                 -v /var/run/docker.sock:/var/run/docker.sock \
-                                -v trivy-cache:/root/.cache/ \
+                                -v trivy-cache-backend:/root/.cache/ \
                                 -v "$WORKSPACE/reports:/reports" \
                                 aquasec/trivy:0.73.0 image \
                                 --scanners vuln \
@@ -134,7 +134,7 @@ EOF
                             
                             docker run --rm \
                                 -v /var/run/docker.sock:/var/run/docker.sock \
-                                -v trivy-cache:/root/.cache/ \
+                                -v trivy-cache-frontend:/root/.cache/ \
                                 -v "$WORKSPACE/reports:/reports" \
                                 aquasec/trivy:0.73.0 image \
                                 --scanners vuln \
@@ -147,6 +147,8 @@ EOF
                 }
             }
         }
+
+
 
         stage('Publish & Deploy') {
             when {
