@@ -16,7 +16,6 @@ pipeline {
     }
 
     environment {
-        DOCKER_HOST                 = 'unix:///var/run/docker.sock'
         LOCAL_BACKEND_IMAGE         = 'sistemaweb-backend'
         LOCAL_FRONTEND_IMAGE        = 'sistemaweb-frontend'
         
