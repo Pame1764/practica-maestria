@@ -10,7 +10,7 @@ pipeline {
     }
 
     tools {
-    NodeJS 'NodeJS 24.19.0'
+        nodejs 'NodeJS 24.19.0'
     }
 
     triggers {
@@ -18,8 +18,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_HOST                 = 'tcp://host.docker.internal:2375'
-        DOCKER_TLS_VERIFY           = '0'
+        DOCKER_HOST                 = 'unix:///var/run/docker.sock'
 
         LOCAL_BACKEND_IMAGE         = 'sistemaweb-backend'
         LOCAL_FRONTEND_IMAGE        = 'sistemaweb-frontend'
