@@ -20,33 +20,24 @@ spec:
     spec:
       containers:
         - name: backend
-          image: practica-backend:v1
-          imagePullPolicy: IfNotPresent
-          command: ["npm", "run", "dev"]
+          image: cinthya12/proyecto-integrador-backend:latest
           ports:
             - containerPort: 3000
-          envFrom:
-            - configMapRef:
-                name: backend-config
           env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
                   name: database-secret
                   key: DATABASE_URL
-            - name: APP_VERSION
-              value: "v1"
           readinessProbe:
             httpGet:
               path: /health
               port: 3000
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 5
-            failureThreshold: 6
           livenessProbe:
             httpGet:
               path: /health
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 10
-            failureThreshold: 3

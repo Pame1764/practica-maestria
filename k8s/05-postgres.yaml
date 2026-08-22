@@ -5,8 +5,6 @@ metadata:
   namespace: devops-lab
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: postgres
@@ -17,7 +15,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:17
+          image: postgres:15-alpine
           ports:
             - containerPort: 5432
           env:
@@ -39,29 +37,7 @@ spec:
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
-            initialDelaySeconds: 5
-            periodSeconds: 5
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
-            claimName: postgres-data
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-  namespace: devops-lab
-spec:
-  selector:
-    app: postgres
-  ports:
-    - name: postgres
-      port: 5432
-      targetPort: 5432
-  type: ClusterIP
+            claimName: postgres-pvc
