@@ -1,19 +1,21 @@
 name: Terraform Validate
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [main]
     paths:
       - "infra/**"
+      - ".github/workflows/terraform-validate.yml"
   push:
     branches: [main]
     paths:
       - "infra/**"
+      - ".github/workflows/terraform-validate.yml"
 
 jobs:
   validar-iac:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: ./infra
@@ -24,11 +26,13 @@ jobs:
 
       - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
 
       - name: Verificar formato
         run: terraform fmt -check -recursive
 
-      - name: Inicializar proveedores
+      - name: Inicializar Terraform
         run: terraform init -backend=false -input=false
 
       - name: Validar configuración
