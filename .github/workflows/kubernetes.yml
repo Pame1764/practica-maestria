@@ -1,0 +1,203 @@
+name: Deploy Kubernetes AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  # ==========================================================
+  # 1. CONSTRUIR Y PUBLICAR IMÁGENES
+  # ==========================================================
+
+  build-and-push:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Obtener código
+        uses: actions/checkout@v4
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Backend
+        run: |
+          docker build \
+            -t ${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-backend:${{ github.sha }} \
+            ./backend
+
+      - name: Build Frontend
+        run: |
+          docker build \
+            -t ${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-frontend:${{ github.sha }} \
+            ./frontend
+
+      - name: Push Backend
+        run: |
+          docker push \
+            ${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-backend:${{ github.sha }}
+
+      - name: Push Frontend
+        run: |
+          docker push \
+            ${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-frontend:${{ github.sha }}
+
+
+  # ==========================================================
+  # 2. DESPLEGAR EN AWS K3S
+  # ==========================================================
+
+  deploy:
+
+    needs:
+      - build-and-push
+
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+
+    env:
+      KUBECONFIG: /home/ubuntu/.kube/config
+
+    steps:
+
+      - name: Obtener código
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          clean: true
+
+      - name: Verificar Kubernetes
+        run: |
+          kubectl get nodes
+
+      - name: Aplicar manifiestos
+        run: |
+          kubectl apply -f k8s/
+
+      - name: Actualizar Backend
+        run: |
+          kubectl set image deployment/practica-backend \
+            backend=${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-backend:${{ github.sha }} \
+            -n devops-lab
+      
+# ==========================================================
+    # 5. ESPERAR POSTGRESQL
+# ==========================================================
+      - name: Esperar PostgreSQL
+        run: |
+          kubectl rollout status deployment/postgres \
+            -n devops-lab \
+            --timeout=120s
+# ==========================================================
+    # 6. ELIMINAR JOB PRISMA ANTERIOR
+# ==========================================================
+      - name: Eliminar Job Prisma anterior
+        run: |
+          kubectl delete job prisma-db-push \
+            -n devops-lab \
+            --ignore-not-found=true
+
+# ==========================================================
+    # 7. CREAR JOB PRISMA CON LA IMAGEN ACTUAL
+# ==========================================================
+
+      - name: Crear Job Prisma DB Push
+        run: |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: batch/v1
+          kind: Job
+
+          metadata:
+            name: prisma-db-push
+            namespace: devops-lab
+
+          spec:
+            backoffLimit: 2
+            ttlSecondsAfterFinished: 300
+
+            template:
+              metadata:
+                labels:
+                  app: prisma-db-push
+
+              spec:
+                restartPolicy: Never
+
+                containers:
+                  - name: prisma-db-push
+
+                    image: ${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-backend:${{ github.sha }}
+
+                    command:
+                      - sh
+                      - -c
+                      - npx prisma db push
+
+                    env:
+                      - name: DATABASE_URL
+                        valueFrom:
+                          secretKeyRef:
+                            name: database-secret
+                            key: DATABASE_URL
+          EOF
+
+# ==========================================================
+    # 8. ESPERAR PRISMA
+# ==========================================================
+
+      - name: Esperar Prisma DB Push
+        run: |
+          kubectl wait \
+            --for=condition=complete \
+            job/prisma-db-push \
+            -n devops-lab \
+            --timeout=180s
+
+# ==========================================================
+    # 9. MOSTRAR LOG DE PRISMA
+# ==========================================================
+      - name: Mostrar resultado Prisma
+        if: always()
+        run: |
+          kubectl logs \
+            job/prisma-db-push \
+            -n devops-lab \
+            --tail=100 || true
+
+
+
+      - name: Actualizar Frontend
+        run: |
+          kubectl set image deployment/practica-frontend \
+            frontend=${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-frontend:${{ github.sha }} \
+            -n devops-lab
+
+      - name: Esperar Backend
+        run: |
+          kubectl rollout status deployment/practica-backend \
+            -n devops-lab \
+            --timeout=180s
+
+      - name: Esperar Frontend
+        run: |
+          kubectl rollout status deployment/practica-frontend \
+            -n devops-lab \
+            --timeout=180s
+
+      - name: Mostrar Pods
+        if: always()
+        run: |
+          kubectl get pods -n devops-lab
+
+      - name: Mostrar Services
+        if: always()
+        run: |
+          kubectl get services -n devops-lab
