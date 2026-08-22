@@ -157,7 +157,7 @@ EOF
             parallel {
                 stage('Docker Publish') {
                     steps {
-                        withCredentials([usernamePassword(credentialsId: 'jenkins-u3', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        withCredentials([usernamePassword(credentialsId: 'Practica-3', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                             sh '''
                                 set -eu
                                 export DOCKER_CONFIG="$(mktemp -d)"
