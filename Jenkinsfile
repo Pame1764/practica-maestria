@@ -9,6 +9,10 @@ pipeline {
         disableConcurrentBuilds()
     }
 
+    tools {
+    nodejs 'NodeJS'
+    }
+
     triggers {
         githubPush()
     }
