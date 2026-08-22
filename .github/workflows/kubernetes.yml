@@ -112,10 +112,7 @@ jobs:
 # ==========================================================
       - name: Eliminar Job Prisma anterior 
         run: | 
-          kubectl delete job prisma-db-push \ 
-            -n devops-lab \ 
-            --ignore-not-found=true \ 
-            --cascade=foreground
+          kubectl delete job prisma-db-push -n devops-lab --ignore-not-found=true || true
 
 # ==========================================================
     # 7. CREAR JOB PRISMA CON LA IMAGEN ACTUAL
