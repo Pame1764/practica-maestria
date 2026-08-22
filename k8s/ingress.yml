@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: practica-ingress
+  namespace: devops-lab
+
+spec:
+  ingressClassName: traefik
+
+  rules:
+    - http:
+        paths:
+
+          # FRONTEND
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: practica-frontend
+                port:
+                  number: 80
+
+          # BACKEND
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: practica-backend
+                port:
+                  number: 3000
