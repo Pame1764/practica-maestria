@@ -91,6 +91,17 @@ jobs:
 # ==========================================================
     # 5. ESPERAR POSTGRESQL
 # ==========================================================
+
+      - name: Diagnosticar Postgres
+        if: always()
+        run: |
+          echo "=== PODS ==="
+          kubectl get pods -n devops-lab
+          echo "=== DESCRIBE POSTGRES ==="
+          kubectl describe pod -l app=postgres -n devops-lab || true
+          echo "=== LOGS POSTGRES ==="
+          kubectl logs -l app=postgres -n devops-lab --tail=50 || true
+
       - name: Esperar PostgreSQL
         run: |
           kubectl rollout status deployment/postgres \
