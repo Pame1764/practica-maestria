@@ -7,7 +7,7 @@ spec:
   selector:
     app: practica-frontend
   ports:
-    - name: http
-      port: 5173
-      targetPort: 5173
+    - protocol: TCP
+      port: 80
+      targetPort: 80
   type: ClusterIP
