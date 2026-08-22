@@ -110,55 +110,50 @@ jobs:
 # ==========================================================
     # 6. ELIMINAR JOB PRISMA ANTERIOR
 # ==========================================================
-      - name: Eliminar Job Prisma anterior
-        run: |
-          kubectl delete job prisma-db-push \
-            -n devops-lab \
-            --ignore-not-found=true
+      - name: Eliminar Job Prisma anterior 
+        run: | 
+          kubectl delete job prisma-db-push \ 
+            -n devops-lab \ 
+            --ignore-not-found=true \ 
+            --cascade=foreground
 
 # ==========================================================
     # 7. CREAR JOB PRISMA CON LA IMAGEN ACTUAL
 # ==========================================================
 
-      - name: Crear Job Prisma DB Push
-        run: |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: batch/v1
-          kind: Job
-
-          metadata:
-            name: prisma-db-push
-            namespace: devops-lab
-
-          spec:
-            backoffLimit: 2
-            ttlSecondsAfterFinished: 300
-
-            template:
-              metadata:
-                labels:
-                  app: prisma-db-push
-
-              spec:
-                restartPolicy: Never
-
-                containers:
-                  - name: prisma-db-push
-
-                    image: ${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-backend:${{ github.sha }}
-
-                    command:
-                      - sh
-                      - -c
-                      - npx prisma db push
-
-                    env:
-                      - name: DATABASE_URL
-                        valueFrom:
-                          secretKeyRef:
-                            name: database-secret
-                            key: DATABASE_URL
+      - name: Crear Job Prisma DB Push 
+        run: | 
+          cat <<EOF | kubectl apply -f - 
+          apiVersion: batch/v1 
+          kind: Job 
+          metadata: 
+            name: prisma-db-push 
+            namespace: devops-lab 
+          spec: 
+            backoffLimit: 2 
+            ttlSecondsAfterFinished: 300 
+            template: 
+              metadata: 
+                labels: 
+                  app: prisma-db-push 
+              spec: 
+                restartPolicy: Never 
+                containers: 
+                  - name: prisma-db-push 
+                    image: ${{ vars.DOCKERHUB_USERNAME }}/proyecto-integrador-backend:${{ github.sha }} 
+                    command: 
+                      - sh 
+                      - -c 
+                      - npx prisma db push 
+                    env: 
+                      - name: DATABASE_URL 
+                        valueFrom: 
+                          secretKeyRef: 
+                            name: database-secret 
+                            key: DATABASE_URL 
           EOF
+
+
 
 # ==========================================================
     # 8. ESPERAR PRISMA
